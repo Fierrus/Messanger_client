@@ -8,22 +8,25 @@ HOST = ''  # адрес хоста (сервера) пустой означае�
 PORT = 10080  # номер порта на котором работает сервер (от 0 до 65525, порты до 1024 зарезервированы для системы, порты TCP и UDP не пересекаются)
 BUFSIZ = 1024  # размер буфера 1Кбайт
 ADDR = (HOST, PORT)  # адрес сервера
- 
-tcpSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  #создаем сокет сервера
+
+tcpSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # создаем сокет сервера
 tcpSerSock.bind(ADDR)  # связываем сокет с адресом
 tcpSerSock.listen(1)  # устанавливаем максимальное число клиентов одновременно обслуживаемых
- 
+
 while True:  # бесконечный цикл сервера
-	logging.debug('Waiting for client...')
-	tcpCliSock, addr = tcpSerSock.accept()  # ждем клиента, при соединении .accept() вернет имя сокета клиента и его адрес (создаст временный сокет tcpCliSock)
-	logging.debug('Connected from: {}'.format(addr))
-	while True:  # цикл связи
-		tcpCliSock.send(b'PING')
-		info = tcpCliSock.recv(BUFSIZ)
-		if info.decode('utf-8') == 'PONG':
-			logging.debug('Client is OK')
-		if not info:
-			break  # разрываем связь если данных нет
-		sleep(5)
-	tcpCliSock.close()  # закрываем сеанс (сокет) с клиентом    
-tcpSerSock.close()  # закрытие сокета сервера
+    logging.debug('Waiting for client...')
+    tcpCliSock, addr = tcpSerSock.accept()  # ждем клиента, при соединении .accept() вернет имя сокета клиента и его адрес (создаст временный сокет tcpCliSock)
+    logging.debug('Connected from: {}'.format(addr))
+    while True:  # цикл связи
+        try:
+            tcpCliSock.send(b'PING')
+            info = tcpCliSock.recv(BUFSIZ)
+            if info.decode('utf-8') == 'PONG':
+                logging.debug('Client is OK')
+            if not info:
+                break  # разрываем связь если данных нет
+        except ConnectionResetError:
+            print('Forced disconection')
+        sleep(5)
+    tcpCliSock.close()  # закрываем сеанс (сокет) с клиентом
+tcpSerSock.close()  # закрытие сокета сервера,sdftn)

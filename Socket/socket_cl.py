@@ -19,7 +19,7 @@ class socket_thread:  # Создание класса для использов�
 
 if __name__ == '__main__':
     a = 1
-    soc = socket.socket(family=AF_INET, type=SOCK_STREAM)  # Параметры семейств сокетов
+    soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Параметры семейств сокетов
     server_adress = ('localhost', 10080)
     try:  # Использование эксепшенов себе на пользу
         soc.connect((server_adress))
