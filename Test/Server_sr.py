@@ -1,7 +1,8 @@
 import socket
 from time import sleep
 import logging
-#logging.basicConfig(level = logging.DEBUG)
+
+logging.basicConfig(level=logging.DEBUG)
 
 HOST = ''  # адрес хоста (сервера) пустой означает использование любого доступного адреса
 PORT = 10080  # номер порта на котором работает сервер (от 0 до 65525, порты до 1024 зарезервированы для системы, порты TCP и UDP не пересекаются)
@@ -18,11 +19,11 @@ while True:  # бесконечный цикл сервера
 	logging.debug('Connected from: {}'.format(addr))
 	while True:  # цикл связи
 		tcpCliSock.send(b'PING')
-		data = tcpCliSock.recv(BUFSIZ)
-		if data.decode('utf-8') == 'PONG':
+		info = tcpCliSock.recv(BUFSIZ)
+		if info.decode('utf-8') == 'PONG':
 			logging.debug('Client is OK')
-		if not data:
+		if not info:
 			break  # разрываем связь если данных нет
-		sleep(60)
+		sleep(5)
 	tcpCliSock.close()  # закрываем сеанс (сокет) с клиентом    
 tcpSerSock.close()  # закрытие сокета сервера
